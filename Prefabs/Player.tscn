@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/Player/Player.cs" type="Script" id=1]
+[ext_resource path="res://Prefabs/Flashlight.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Player/Camera.cs" type="Script" id=3]
+
+[sub_resource type="CapsuleShape" id=1]
+height = 2.0
+
+[sub_resource type="CapsuleShape" id=2]
+radius = 0.910084
+height = 1.31883
+
+[node name="Player" type="KinematicBody"]
+script = ExtResource( 1 )
+sensitivity = 0.003
+flashlight_prefab = ExtResource( 2 )
+speed = 10.0
+accel = 50.0
+deaccel = 20.0
+raycast_path = NodePath("Camera/RayCast")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34216, 0 )
+far = 10000.0
+script = ExtResource( 3 )
+sensitivity = 0.25
+
+[node name="FlashlightTarget" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.787398, -0.601032, -1.22157 )
+
+[node name="FlashlightReadingTarget" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74508, 0.304351, -0.280261 )
+
+[node name="RayCast" type="RayCast" parent="Camera"]
+enabled = true
+cast_to = Vector3( 0, 0, -5 )
+collision_mask = 4
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="PaperTarget" type="Spatial" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.723189 )
+
+[node name="Area" type="Area" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape" parent="Area"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.581585, 0 )
+shape = SubResource( 2 )
+[connection signal="body_entered" from="Area" to="." method="AddFloor"]
+[connection signal="body_exited" from="Area" to="." method="SubFloor"]

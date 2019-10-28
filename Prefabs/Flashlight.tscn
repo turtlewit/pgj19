@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/Player/Flashlight.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/Player/FlashlightMesh.cs" type="Script" id=2]
+[ext_resource path="res://Resources/Flashlight Material.tres" type="Material" id=3]
+[ext_resource path="res://Scripts/Player/ViewportCamera.cs" type="Script" id=4]
+
+[sub_resource type="World" id=1]
+
+[node name="FlashlightPlayerOrigin" type="Spatial"]
+script = ExtResource( 1 )
+target_path = NodePath("../Player/Camera/FlashlightTarget")
+lerp_speed = 8.0
+on = false
+
+[node name="FlashlightCameraOrigin" type="Spatial" parent="."]
+
+[node name="Flashlight" type="Spatial" parent="FlashlightCameraOrigin"]
+
+[node name="ViewportContainer" type="ViewportContainer" parent="FlashlightCameraOrigin/Flashlight"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="FlashlightCameraOrigin/Flashlight/ViewportContainer"]
+size = Vector2( 1920, 1080 )
+own_world = true
+world = SubResource( 1 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="FlashlightMesh" type="CSGCombiner" parent="FlashlightCameraOrigin/Flashlight/ViewportContainer/Viewport"]
+transform = Transform( 0.422572, 0, 0, 0, 0.422572, 0, 0, 0, 0.422572, 0, 0, 0 )
+script = ExtResource( 2 )
+
+[node name="base" type="CSGBox" parent="FlashlightCameraOrigin/Flashlight/ViewportContainer/Viewport/FlashlightMesh"]
+width = 0.5
+height = 0.5
+material = ExtResource( 3 )
+
+[node name="head" type="CSGBox" parent="FlashlightCameraOrigin/Flashlight/ViewportContainer/Viewport/FlashlightMesh"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.00269 )
+width = 0.7
+height = 0.7
+depth = 0.5
+material = ExtResource( 3 )
+
+[node name="ViewportCamera" type="Camera" parent="FlashlightCameraOrigin/Flashlight/ViewportContainer/Viewport"]
+current = true
+far = 10.0
+script = ExtResource( 4 )
+camera_path = NodePath("../../../../../../Player/Camera")
+
+[node name="SpotLight" type="SpotLight" parent="FlashlightCameraOrigin/Flashlight"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.157596, 0 )
+layers = 2
+light_energy = 2.0
+light_indirect_energy = 0.0
+light_bake_mode = 0
+light_cull_mask = 4294967293
+shadow_enabled = true
+shadow_reverse_cull_face = true
+spot_range = 200.0
+spot_angle = 17.5477

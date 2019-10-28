@@ -1,0 +1,5 @@
+.mono/
+.import/
+mono_crash*
+*.blob
+export/
